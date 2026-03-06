@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Data Siswa</title>
+
+<style>
+
+body{
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+    min-height:100vh;
+    padding-top:40px;
+    font-family:"Times New Roman";
+    background-color:#f2f2f2;
+}
+
+.box{
+    text-align:center;
+    background:white;
+    padding:25px;
+    border-radius:8px;
+    box-shadow:0px 0px 8px rgba(0,0,0,0.15);
+    width:320px;
+}
+
+input{
+    width:90%;
+    padding:5px;
+    margin-top:3px;
+}
+
+button{
+    margin:5px;
+    padding:6px 12px;
+    cursor:pointer;
+}
+
+#output{
+    margin-top:15px;
+    text-align:left;
+}
+
+.lulus{
+    color:green;
+    font-weight:bold;
+}
+
+.tidaklulus{
+    color:red;
+    font-weight:bold;
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="box">
+
+<h2>Input Data Siswa</h2>
+
+<label>Nama:</label><br>
+<input type="text" id="nama"><br><br>
+
+<label>Rombel:</label><br>
+<input type="text" id="rombel"><br><br>
+
+<label>Nilai:</label><br>
+<input type="number" id="nilai"><br><br>
+
+<button onclick="tambahData()">Tambah Data</button>
+
+<h3>Hasil:</h3>
+<div id="output"></div>
+
+</div>
+
+<script>
+
+let array = [];
+let indexEdit = null;
+
+function tambahData() {
+
+    let nama = document.getElementById("nama").value;
+    let rombel = document.getElementById("rombel").value;
+    let nilai = Number(document.getElementById("nilai").value);
+
+    if (nama === "" || rombel === "" || isNaN(nilai)) {
+        alert("Data belum lengkap!");
+        return;
+    }
+
+    let siswa = {
+        nama: nama,
+        rombel: rombel,
+        nilai: nilai,
+
+        get info() {
+            return `Nama: ${this.nama}<br>
+                    Rombel: ${this.rombel}<br>
+                    Nilai: ${this.nilai}<br>`;
+        },
+
+        get status() {
+            if(this.nilai >= 75){
+                return `<span class="lulus">Kelulusan: Lulus</span><br>`;
+            }else{
+                return `<span class="tidaklulus">Kelulusan: Tidak Lulus</span><br>`;
+            }
+        },
+
+        get grade() {
+            if (this.nilai >= 90) return "A";
+            else if (this.nilai >= 80) return "B";
+            else if (this.nilai >= 75) return "C";
+            else return "D";
+        }
+    };
+
+    array.push(siswa);
+    tampilkanData();
+    resetForm();
+}
+
+function tampilkanData() {
+
+    let hasil = "";
+
+    for (let i = 0; i < array.length; i++) {
+
+        let warnaGrade = "";
+        if(array[i].grade === "A"){
+            warnaGrade = `<span class="lulus">Grade: A</span>`;
+        }else{
+            warnaGrade = `Grade: ${array[i].grade}`;
+        }
+
+        hasil += array[i].info +
+                 array[i].status +
+                 warnaGrade +
+                 `<br>
+                  <button onclick="editData(${i})">Update Data</button>
+                  <button onclick="hapusData(${i})">Delete</button>
+                  <hr>`;
+    }
+
+    document.getElementById("output").innerHTML = hasil;
+}
+
+function hapusData(index) {
+    array.splice(index, 1);
+    tampilkanData();
+}
+
+function editData(index) {
+
+    document.getElementById("nama").value = array[index].nama;
+    document.getElementById("rombel").value = array[index].rombel;
+    document.getElementById("nilai").value = array[index].nilai;
+
+    array.splice(index,1);
+}
+
+function resetForm() {
+    document.getElementById("nama").value = "";
+    document.getElementById("rombel").value = "";
+    document.getElementById("nilai").value = "";
+}
+
+</script>
+
+</body>
+</html>
